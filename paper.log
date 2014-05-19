@@ -1,9 +1,9 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2013.1.23)  5 MAY 2014 15:34
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2013.1.23)  19 MAY 2014 13:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**"/mnt/storage1/users/b/bm/bmu1/Рабочий стол/report/paper.tex"
-(/mnt/storage1/users/b/bm/bmu1/Рабочий стол/report/paper.tex
+**paper.tex
+(./paper.tex
 LaTeX2e <2011/06/27>
 Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, ge
 rman-x-2012-05-30, ngerman-x-2012-05-30, afrikaans, ancientgreek, ibycus, arabi
@@ -1561,13 +1561,13 @@ Package rerunfilecheck Info: File `paper.out' has not changed.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 27.
  ) 
 Here is how much of TeX's memory you used:
- 22374 strings out of 493488
- 343900 string characters out of 3143477
+ 22373 strings out of 493488
+ 343717 string characters out of 3143477
  448911 words of memory out of 3000000
  25192 multiletter control sequences out of 15000+200000
  28275 words of font info for 78 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 61i,11n,55p,811b,453s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 61i,11n,55p,748b,453s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/mnt/texlive2/2012/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t2a.enc}</mn
 t/texlive2/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></mnt/texl
 ive2/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></mnt/texlive2/20

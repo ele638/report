@@ -1,6 +1,6 @@
 # Fdb version 3
-["pdflatex"] 1399289654 "/mnt/storage1/users/b/bm/bmu1/Рабочий стол/report/paper.tex" "paper.pdf" "paper" 1399289655
-  "/mnt/storage1/users/b/bm/bmu1/Рабочий стол/report/paper.tex" 1397476402 1058 e3b99010acc0262ac4aad6d20d66fa53 ""
+["pdflatex"] 1399289654 "paper.tex" "paper.pdf" "paper" 1400492583
+  "/mnt/storage1/users/b/bm/bmu1/Рабочий стол/report/paper.tex" 1399294028 1058 e3b99010acc0262ac4aad6d20d66fa53 ""
   "/mnt/texlive2/2012/../texmf-local/tex/latex/local/msiu/msiu_term_work.sty" 1346416257 4027 feddea2c84a736274bb6e8de87c26057 ""
   "/mnt/texlive2/2012/../texmf-local/tex/latex/local/msiu/russmath.sty" 1346416257 1910 7137d82b73b357167b597e284eb0d9fc ""
   "/mnt/texlive2/2012/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t2a.enc" 1136849721 3141 82d5616418ed8d5de703b3951bedecb4 ""
@@ -207,15 +207,15 @@
   "/mnt/texlive2/2012/texmf-var/web2c/pdftex/pdflatex.fmt" 1358962067 3689421 8936be1c771d8a4f43ad4592141f43bd ""
   "/mnt/texlive2/2012/texmf.cnf" 1349878194 587 d9be2a8382e197bcbf84bb134e84ec26 ""
   "/mnt/texlive2/2012/texmf/web2c/texmf.cnf" 1336865692 31299 729e216d9b945005c0d4b079c0500bc9 ""
-  "annotation.tex" 1397475493 837 b1c671759c71e7c1bd3a1d6d40e21660 ""
-  "bib.tex" 1395038194 1420 a0999ac06f2a6fd4e130a4b0d6e727f7 ""
-  "intro.tex" 1399289026 2558 c1ca135f03ebddb71eae5cc1a20e8a74 ""
-  "paper.aux" 1399289655 2944 7e56863f49d06b13ff3ceb56226d961b ""
-  "paper.out" 1399289655 919 c7937d068a6d06d8473fcaa9c3602831 ""
-  "paper.tex" 1397476402 1058 e3b99010acc0262ac4aad6d20d66fa53 ""
-  "paper.toc" 1399289655 1679 040b6f9379ae6af955077dfb14737857 ""
-  "sect1.tex" 1399289644 1562 6568e35a8cc0dd601f11f3d1df002b50 ""
-  "sect2.tex" 1395038153 666 78ca047dc9f96c973124e1c8d6d28c1b ""
+  "annotation.tex" 1400492458 837 b1c671759c71e7c1bd3a1d6d40e21660 ""
+  "bib.tex" 1400492458 1420 a0999ac06f2a6fd4e130a4b0d6e727f7 ""
+  "intro.tex" 1400492458 2558 c1ca135f03ebddb71eae5cc1a20e8a74 ""
+  "paper.aux" 1400492481 2944 7e56863f49d06b13ff3ceb56226d961b ""
+  "paper.out" 1400492481 919 c7937d068a6d06d8473fcaa9c3602831 ""
+  "paper.tex" 1400492459 1058 e3b99010acc0262ac4aad6d20d66fa53 ""
+  "paper.toc" 1400492481 1679 040b6f9379ae6af955077dfb14737857 ""
+  "sect1.tex" 1400492459 1562 6568e35a8cc0dd601f11f3d1df002b50 ""
+  "sect2.tex" 1400492459 666 78ca047dc9f96c973124e1c8d6d28c1b ""
   (generated)
   "paper.toc"
   "paper.pdf"
