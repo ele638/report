@@ -1,12 +1,43 @@
 \section{Модификация проекта «Выпуклая оболочка»}
 \subsection*{Точная постановка задачи}
 Вычисляется количество вершин выпуклой оболочки, лежащих в 1-окрестности заданного заполненного треугольника.
-\subsection*{Решение данной задачи и модификация кода}
+После запуска программа предлагает пользователю ввести последовательно координаты вершин выпуклой оболочки. Введённая точка индуктивно добавляется в
+выпуклую оболочку. Нам же необходимо вместе со значениями периметра и площади
+выпуклой оболочки выводить количество точек, попадающие в заданный заполненный треугольник или в его 1-окрестность. Для этого необходимо до начала ввода координат вершин выпуклой оболочки задать треугольник, потребовав на ввод 6 координат треугольника. 
+
+  Это задание не требует серьёзной модификации исходного кода, все функции
+будут вписываться в файлы проекта $\texttt{convex.rb}$ и $\texttt{r2point.rb}$.
+
+\subsection*{Решение}
 Эталонный проект до модификации индуктивно строит выпуклую оболочку по
 точкам. При добавлении новой точки программа индуктивно перевычисляет периметр и
-площадь оболочки. Наша цель - модифицировать эталонный проект таким 
-образом, чтобы вычислялось количество вершин выпуклой оболочки, лежащих в 1-окрестности заданного заполненного треугольника..
+площадь оболочки. Наша цель "--- модифицировать эталонный проект таким 
+образом, чтобы вычислялось количество вершин выпуклой оболочки, лежащих в 1-окрестности заданного заполненного треугольника.
 
+  Для решения данной задачи необходимо проверять, принадлежат ли вершины выпуклой оболочки
+заданному треугольнику или 1-окрестности заданного треугольника. В языке Ruby имеется библиотека $\texttt{Math}$, которая содержит
+методы вычисления простейших тригонометрических функций, в частности, в данном проекте используется $\texttt{Math.sqrt}$.
+
+  После добавления вершины выпуклой оболочки возникает три случая, которые необходимо рассмотреть: 
+\begin{enumerate}
+\item вершина находится в заполненном треугольнике;
+\item вершина находится в единичной окрестности треугольника;
+\item вершина находится вне треугольника и единичной окрестности.
+\end{enumerate}
+\subsubsection*{Вершина находится в заполненном треугольнике}
+  Для того, чтобы проверить, лежит ли точка в треугольнике мы будем использовать псевдоскалярное произведение~\cite{psevdoscalyar}. 2 вершины треугольника образуют отрезок, который можно воспринять как луч. Этот луч делит всю плоскость на 2 полуплоскости. Берутся 2 вершины треугольника и обозреваемая точка, затем относительно них выполняется псевдоскалярное произведение.
+\begin{center}
+\includegraphics[width=0.9\hsize]{images/psevd}
+\end{center}
+ Знак числа, которое получается при вычислении говорит нам, в какой из полуплоскостей относительно стороны треугольника лежит точка. Если все знаки чисел, полученных во время вычисления псевдоскалярных произведений относительно всех сторон треугольника, совпадают, значит точка лежит внутри треугольника, иначе, точка находится вне треугольника.
+\subsubsection*{Вершина находится в единичной окрестности треугольника}
+   Для определения принадлежности точки единичной окрестности мы будем считать расстояние от точки до сторон треугольника. Если хотя бы одно из этих расстояний находится в промежутке (0,1), то точка находится в единичной окрестности заданного треугольника. Для определения расстояния от точки надо сначала определить, лежит ли точка левее или правее отрезка. Вычисляется скалярное произведение от искомой точки до каждого из карев отрезка.
+Если одно из этих скалярных произведений меньше или равно нулю, то возвращается расстояние от точки до края отрезка, скалярное произведение с которым было меньше либо равно нулю, причем считается расстояние как гипотенуза прямоугольного треугольника. Если же скалярные произведения больше нуля, то расстояние считается по формуле, которая указана ниже~\cite{rasst}.
+
+$$d\bigr(P,L)=\frac{(y_{0}-y_{1})x+(x_{1}-x_{0})y+(x_{0}y_{1}-x_{1}y_{0})}{\sqrt{(x_{1}-x_{0})^2+(y_{1}-y_{0})^2}}.$$
+
+ 
+\subsection*{Модификация кода}
 Для начала модифицируем файл $\texttt{convex/r2point.rb}$ добавив в класс $\texttt{R2Point}$ методы,
 которые выполняют следующие действия:
 
@@ -17,7 +48,6 @@
 \item проверка принадлежности точки окрестности и треугольнику.
 \end{itemize}
 
-\newpage
 \begin{small}
 \begin{verbatim}
 def dist_segm(a,b)
@@ -32,11 +62,7 @@ end
 \end{verbatim}
 \end{small}   
 
-Метод $\texttt{dist\_segm(a,b)}$ основан на векторной алгебре. Первоначально определяется, лежит ли точка левее или правее отрезка, для этого вычисляется скалярное произведение от искомой точки до каждого из карев отрезка.
-Если одно из этих скалярных произведений меньше или равно нулю, то возвращается расстояние от точки до края отрезка, скалярное произведение с которым было меньше либо равно нулю, причем считается расстояние как гипотенуза прямоугольного треугольника. Если же скалярные произведения больше нуля, то расстояние считается по формуле, которая указана ниже.
-\begin{center}
-\includegraphics[width=0.5\hsize]{images/distsegm}
-\end{center}
+Метод $\texttt{dist\_segm(a,b)}$ возвращает расстояние от точки, к которой применяется этот метод до отрезка, концами которого являются точки $\mathit a$ и $\mathit b$.
 
 \begin{small}
 \begin{verbatim}
@@ -49,14 +75,7 @@ end
 \end{verbatim}
 \end{small} 
 
-Данный метод использует псевдоскалярное произведение для определения, находится ли точка внутри треугольника.
-2 вершины треугольника образуют отрезок, который можно воспринять как луч. Этот луч делит всю плоскость на 2 полуплоскости. Берутся 2 вершины треугольника и обозреваемая точка, затем относительно них выполняется псевдоскалярное произведение.
-
-\begin{center}
-\includegraphics[width=1.1\hsize]{images/psevd}
-\end{center}
-
- Знак числа, которое получается при вычислении говорит нам, в какой из полуплоскостей относительно стороны треугольника лежит точка. Если все знаки чисел, полученных во время вычисления псевдоскалярных произведений относительно всех сторон треугольника, совпадают, значит точка лежит внутри треугольника, иначе, точка находится вне треугольника.
+Метод $\texttt{inside\_triangle?(a,b,c)}$ использует псевдоскалярное произведение для определения, находится ли точка внутри треугольника. Если точка, к которой применяется этот метод находится внутри треугольника, то метод возвращает true, иначе возвращается false
 
 \begin{small}
 \begin{verbatim}
@@ -73,7 +92,6 @@ end
 
 Метод $\texttt{is\_inside?(a,b,c)}$ выполняет финальную проверку на принадлежность точки треугольнику или окрестности треугольника. Первоначально, он проверяет, лежит ли точка внутри треугольника, вызывая метод $\texttt{inside\_triangle?(a,b,c)}$. Если этот метод вернул true, то и метод $\texttt{is\_inside?(a,b,c)}$ возвращает true, говоря о том, что точка удовлетворяет условию. Если же был получен false, то идет проверка окрестности. Проверяется расстояние от точки до каждой из сторон при помощи метода $\texttt{dist\_segm(a,b)}$. Если хотя бы до одной стороны расстояние больше нуля и меньше единицы, то возвращается true, опять же говоря о том, что точка удовлетворяет условию. Во всех остальных ситуациях (если точка не лежит ни в треугольнике, ни в окрестности) возвращается false, что означает, что точка не удовлетворяет условию и увеличивать количество точек, удовлетворяющих условию, не стоит.
 
-\newpage
 Теперь модифицируем файл $\texttt{convex/convex.rb}$. Добавим в класс $\texttt{Figure}$  инициализацию объекта, метод создания треугольника, метод проверки
 на принадлежность треугольнику и метод получения количество вершин выпуклой оболочки, которые удовлетворяют нашему условию.
 
@@ -194,254 +212,117 @@ end
 \end{verbatim}
 \end{small}
 
-Ещё нам необходимо проверить является ли найденная точка пересечением прямых или точкой пересечения отрезков. 
-Чтобы этот случай учитывался добавим в файл $\texttt{convex/convex.rb}$ метод $\texttt{is\_on\_segments?}$ в 
-класс $\texttt{Segment}$.
-
-
-\begin{small}
-\begin{verbatim}
-def is_on_segments?(point1,point2)
- j=crosspoint(point1,point2).inside?(point1,point2)
- k=crosspoint(point1,point2).inside?(@p,@q)
- if cross?(point1,point2)
-  j and k
- else
-  false
- end
-end
-\end{verbatim}
-\end{small}
-
-Теперь можно приступить к созданию нового метода, который будет вычислять периметр части ребра, лежащего 
-внутри или на границе заданного треугольника. Для этого создадим новый метод $\texttt{part\_perimeter}$ 
-и добавим его в класс $\texttt{Segment}$.
-
-Для начала проверим с помощью метода $\texttt{outside\_tr?}$ лежат ли обе точки отрезка внутри или на границе треугольника (рис.1). 
-\newpage\begin{figure}[ht!]
-\begin{center}
-\includegraphics[width=0.8\hsize]{images/1}
-\end{center}
-\caption{}\label{fig:convex}
-\end{figure}
-
-
-Если точки лежат, то возвращаем расстояние от одной точки до другой как периметр. Для этого используем метод $\texttt{dist}$, который вычисляет расстояние по формуле:
-
-$$\sqrt{(x_2-x_1)^2+(y_2-y_1)^2}_.$$
-
-Если точки не лежат, то продолжаем проверку. Проверяем следующее условие, когда одна точка лежит снаружи, а другая находится строго внутри треугольника, 
-тогда вычисляем расстояние от точки пересечения одной из сторон треугольника до точки лежащей строго внутри треугольника. Для нахождения точки пересечения используем метод  
-$\texttt{crosspoint}$ и выводим расстояние от найденой точки до точки лежащей строго внутри треугольника. 
-
-Если одна точка строго снаружи, а другая точка лежит на границе треугольника, тогда проверяем лежит ли 
-одна точка на отрезке, а другая на прямой с помощью методов $\texttt{on\_segment? и on\_line?}$. Также необходимо учитывать,
-что обе точки могут лежать на одной прямой (рис. 2). Тогда выводим расстояние прямой лежащей в треугольнике или на его границе.
-\begin{figure}[ht!]
-\begin{center}
-\includegraphics[width=0.8\hsize]{images/2}
-\end{center}
-\caption{}\label{fig:convex}
-\end{figure}
-
-Для метода $\texttt{is\_on\_segments?}$ создадим массив куда будем добавлять результат, является ли найденная точка 
-пересечения прямых $-$ точкой пересечения отрезков.
-И выводим расстояние от одной точки до другой. 
-
-После рассмотренных случаев метод $\texttt{part\_perimeter}$ примет следующий вид:
-\begin{small}
-\begin{verbatim}
-class Segment < Figure
-  ...
-def part_perimeter()
-  pt=!@p.outside_tr?(@point1,@point2,@point3)
-  pt=!@q.outside_tr?(@point1,@point2,@point3)
-  pq=@p.outside_tr?(@point1, @point2, @point3)
-  qp=@q.inside_tr?(@point1, @point2, @point3)
-  pv=@q.outside_tr?(@point1, @point2, @point3)
-  qv=@p.inside_tr?(@point1, @point2, @point3)
-  
-  if pt and pt
-    return @p.dist(@q)                         
-  elsif pq and qp
-    if is_on_segments?(@point1, @point2) 
-	  return @p.dist(@q) - crosspoint(@point1, @point2).dist(@p)
-	elsif is_on_segments?(@point2, @point3)
-	  return @p.dist(@q) - crosspoint(@point2, @point3).dist(@p) 
-    elsif is_on_segments?(@point1, @point3)
-	  return @p.dist(@q) - crosspoint(@point1, @point3).dist(@p)  
-	end
-  elsif pv and qv
-    if is_on_segments?(@point1, @point2) 
-	  return @p.dist(@q) - crosspoint(@point1, @point2).dist(@q) 
-    elsif is_on_segments?(@point2, @point3)
-	  return @p.dist(@q) - crosspoint(@point2, @point3).dist(@q) 
-    elsif is_on_segments?(@point1, @point3)
-	  return @p.dist(@q) - crosspoint(@point1, @point3).dist(@q) 
-	end
-  else
-    if @q.on_segment?(@point1, @point2) && @p.on_line?(@point1, @point2)
-      return @p.dist(@q) - [@p.dist(@point1), @p.dist(@point2)].min
-    elsif @q.on_segment?(@point2, @point3) && @p.on_line?(@point3, @point2)
-      return @p.dist(@q) - [@p.dist(@point3), @p.dist(@point2)].min
-    elsif @q.on_segment?(@point1, @point3) && @p.on_line?(@point3, @point1)
-      return @p.dist(@q) - [@p.dist(@point3), @p.dist(@point1)].min
-    end
-	  
-      if @p.on_segment?(@point1, @point2) && @q.on_line?(@point1, @point2)
-        return @p.dist(@q) - [@q.dist(@point1), @q.dist(@point2)].min
-      elsif @p.on_segment?(@point2, @point3) && @q.on_line?(@point3, @point2)
-        return @p.dist(@q) - [@q.dist(@point3), @q.dist(@point2)].min
-      elsif @p.on_segment?(@point1, @point3) && @q.on_line?(@point3, @point1)
-        return @p.dist(@q) - [@q.dist(@point3), @q.dist(@point1)].min
-      end
-	  
-	  
-	  
-      if @p.on_line?(@point1, @point2) && @q.on_line?(@point1, @point2)
-	     return @point1.dist(@point2) 
-      elsif @p.on_line?(@point3, @point2) && @q.on_line?(@point3, @point2)
-	    return @point3.dist(@point2) 
-      elsif @p.on_line?(@point1, @point3) && @q.on_line?(@point1, @point3)
-	    return @point1.dist(@point3) 
-	  end
-	  
-      array = []
-	  
-	  if is_on_segments?(@point1, @point2)
-	    array << crosspoint(@point1, @point2) 
-      elsif is_on_segments?(@point2, @point3)
-	    array << crosspoint(@point2, @point3) 
-      elsif is_on_segments?(@point1, @point3)
-	    array << crosspoint(@point1, @point3) 
-	  end
-	  
-      if array.size == 3 
-       if array[0] != array[1]
-	     return array[0].dist(array[1]) 
-       elsif array[2] != array[1]
-	     return array[2].dist(array[1]) 
-       elsif array[0] != array[2]
-	     return array[0].dist(array[2]) 
-	   end
-      elsif array.size == 2
-        return array[0].dist(array[1])
-      else
-        return 0.0
-      end
-    end
-  end
-	...
-end
-\end{verbatim}
-\end{small}
-
-Также нам необходимо модифицировать класс $\texttt{Polygon}$, добавив небольшие изменения в методы 
-$\texttt{initialize и add(t)}$, а именно:
+Теперь необходимо модифицировать класс $\texttt{Polygon}$, изменив инициализацию объекта и метод $\texttt{add(t)}$:
  
-Вычисляем периметр части выпуклой оболочки лежащей в заданном треугольнике.
+Объект класса $\texttt{Polygon}$ создается тогда, когда 3 вершины выпуклой оболочки образуют треугольник. Поэтому в инициализации мы будем проверять эти 3 вершины
 \begin{small}
 \begin{verbatim}
 class Polygon < Figure
-  attr_reader :points, :perimeter, :area, :part_perimeter
-  ...
-  def initialize(a, b, c, point1, point2, point3) 
+  attr_reader :points, :perimeter, :area
+  def initialize(a, b, c) 
     ...
-    ao=Segment.new(a, b, @point1, @point2, @point3).part_perimeter
-    bo=Segment.new(b, c, @point1, @point2, @point3).part_perimeter
-    co=Segment.new(a, c, @point1, @point2, @point3).part_perimeter
-    @part_perimeter = ao + bo + co;  end
+    @ins=intr?(a)+intr?(b)+intr?(c)
+  end
 \end{verbatim}
 \end{small}	  
-Когда добавляем новую точку нужно рассмотреть несколько случаев:
-\begin{enumerate}
-\item если освещённых ребер нет, что означает новая точка попала внутрь или 
-  на границу старой выпуклой оболочки и нам нечего не нужно делать;
-\item если хотя бы одно освещённое ребро есть, то их нужно удалить и соединить концы оставшейся ломаной с новой точкой.
-\end{enumerate}
-\begin{small}
-\begin{verbatim}
- def add(t)
-   ...
-  if t.light?(@points.last, @points.first)
-    ...
-  dl=Segment.new(@points.first,@points.last,@point1,@point2,@point3)
-  @part_perimeter -= dl.part_perimeter
-    ...
-\end{verbatim}
-\end{small}	
-Для каждого освещённого ребра нам нужно уменьшить периметр оболочки на его длину.
+При добавлении вершины выпуклой оболочки проверяется, нет ли из этой точки освещенных ребер. Если их нет, значит добавленная вершина находится внутри или на границе прежней оболочки и она ``поглощается'' старой оболочкой, а значит, пересчитывать ничего не надо. Если же хотя бы одно ребро освещено из этой точки, то все освещенные ребра удаляются, а концы получившейся ломаной соединяется с новой вершиной. При этом могут быть удалены точки, которые удовлетворяли условию. Для этого в циклах удаления точек надо проверять, подходили ли они нам ранее.
 \begin{small}
 \begin{verbatim}
   while t.light?(p, @points.first)
     ...
-  det=Segment.new(@points.first, p, @point1, @point2, @point3).part_perimeter
-  @part_perimeter -= det
+    @ins -= intr?(p)
     ...
   end
   ...
 
   while t.light?(@points.last, p)
    ...
-   get=Segment.new(p, @points.last, @point1, @point2, @point3).part_perimeter
-   @part_perimeter -= get
+   @ins -= intr?(p)
    ...
   end
 \end{verbatim}
 \end{small} 
-Затем нам необходимо добавить сумму длин двух новых рёбер.
+После этого проверяем, подходит ли новая вершина оболочки нашему условию.
 \begin{small}
 \begin{verbatim}
        ... 
-    ml=Segment.new(@points.first, t, @point1, @point2, @point3).part_perimeter
-    nl=Segment.new(t, @points.last, @point1, @point2, @point3).part_perimeter
-    @part_perimeter += ml + nl
-    ...
-   end
-   self
+      @ins += intr?(t)
+      end
+    self
   end
 end
 \end{verbatim}
 \end{small}
 
-Но для того чтобы рисовался треугольник нам нужно модифицировать файл $\texttt{convex/tk\_drawer.rb}$ 
-метод $\texttt{draw}$ класса $\texttt{Figure}$:
+На этом модификация файла $\texttt{convex/convex.rb}$ завершена. Теперь необходимо добавить графическую часть. Необходимо модифицировать в файле \sloppy $\texttt{convex/tk\_drawer.rb}$ метод $\texttt{draw}$ класса $\texttt{Figure}$ и добавить методы $\texttt{draw\_poly}$, $\texttt{draw\_line\_1}$ и $\texttt{draw\_circle}$:
 \begin{small}
 \begin{verbatim}
-
-
-
-
-
 class Figure
   def draw
-   ...
-    TkDrawer.draw_line(@point1, @point2)
-    TkDrawer.draw_line(@point2, @point3)
-    TkDrawer.draw_line(@point3, @point1)
+    ...
+    TkDrawer.draw_poly(@@a,@@b,@@c)
+    TkDrawer.draw_line_1(@@a,@@b)
+    TkDrawer.draw_line_1(@@b,@@c)
+    TkDrawer.draw_line_1(@@a,@@c)
+    TkDrawer.draw_circle(@@a)
+    TkDrawer.draw_circle(@@b)
+    TkDrawer.draw_circle(@@c)
+    TkDrawer.draw_line(@@a,@@b)
+    TkDrawer.draw_line(@@b,@@c)
+    TkDrawer.draw_line(@@a,@@c)
   end
 end
 \end{verbatim}
 \end{small}
 
-Для вывода результата на экран изменяем в файлах $\texttt{convex/run\_tkconvex.rb}$ и $\texttt{convex/run\_convex.rb}$ несколько строк.
-
-
+  Все вышеуказанные методы получают на вход переменные класса $\texttt{Figure}$, точки заданного треугольника.
+  
+  Метод $\texttt{draw\_poly(a,b,c)}$ изображает заполненный полигон без контура, создавая объект класса  $\texttt{TkcPolygon}$ библиотеки $\texttt{Tk}$.
 \begin{small}
 \begin{verbatim}
-  fig = Void.new(R2Point.new, R2Point.new, R2Point.new)
-    ...
-  puts "S = #{fig.area}, P = #{fig.perimeter} perimetr = #{fig.part_perimeter}"
+  def TkDrawer.draw_poly(a,b,c)
+    TkcPolygon.new(CANVAS, x(a), y(a), x(b), y(b), x(c), y(c), 'fill'=>'green')
+  end
 \end{verbatim}
 \end{small}
 
-Модификация эталонного проекта «Выпуклая оболочка» завершена. Пример работы программы можно увидеть на (рис.3).
+  Метод $\texttt{draw\_line\_1(a,b)}$ изображает отрезок с толщиной равной 2SCALE(по SCALE с левой и правой стороны треугольника соответственно). Так мы будем изображать окрестность сторон треугольника.
+\begin{small}
+\begin{verbatim}
+  def TkDrawer.draw_line_1(p,q) 
+    TkcLine.new(CANVAS, x(p), y(p), x(q), y(q), 'width'=>2*SCALE, 'fill'=>'green' )    
+  end
+\end{verbatim}
+\end{small}
+
+  Метод $\texttt{draw\_circle}$ изображает круг радиуса SCALE, который является единичной окрестностью вершин заданного треугольника.
+\begin{small}
+\begin{verbatim}
+ def TkDrawer.draw_circle(p)
+    TkcOval.new(CANVAS, x(p) + SCALE, y(p) + SCALE, x(p) - SCALE, y(p) - SCALE, 
+    'fill'=>"green")
+  end
+\end{verbatim}
+\end{small}
+
+\newpage
+Для вывода результата на экран изменяем в файлах $\texttt{convex/run\_tkconvex.rb}$ и $\texttt{convex/run\_convex.rb}$ строку вывода.
+\begin{small}
+\begin{verbatim}
+fig = Void.new
+  ...
+    puts "S = #{fig.area}, P = #{fig.perimeter}, 
+    count inside points = #{fig.inside_points}"
+\end{verbatim}
+\end{small}
+
+Модификация эталонного проекта «Выпуклая оболочка» завершена. Пример работы программы можно увидеть на (рис.1).
 
 \begin{figure}[ht!]
 \begin{center}
-\includegraphics[width=0.8\hsize]{images/3}
+\includegraphics[width=0.8\hsize]{images/screen1}
 \end{center}
-\caption{Работа программы «Выпуклая оболочка»}\label{fig:convex}
+\caption{Работа программы «Выпуклая оболочка»}
 \end{figure}
 
 
