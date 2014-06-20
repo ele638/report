@@ -1,42 +1,67 @@
 \section{Приложение А}
 
-Окружение \verb|lstinputlisting| также даёт возможность включать в документ
-исходные тексты программ, позволяя оформлять их очень и очень разнообразно. 
-
-Можно, например, нумеровать строки:
-
-\begin{lstlisting}[numbers=left, firstnumber=100]
-x, b = -1, [-5, -2, 3, 4, 4, 5]
-j, i = 0, b.size - 1
-while j+1 != i
-  k = (i+j)/2
-  b[k] < x ? j = k : i = k
-end
-puts i
-\end{lstlisting}
-
-Исходный код для получения этого листинга имеет следующий вид:
+Модификация эталонного проекта \texttt{r2point.rb}:
 
 \begin{small}
 \begin{verbatim}
-\begin{lstlisting}[numbers=left, firstnumber=100]
-x, b = -1, [-5, -2, 3, 4, 4, 5]
-j, i = 0, b.size - 1
-while j+1 != i
-  k = (i+j)/2
-  b[k] < x ? j = k : i = k
-end
-puts i
-\end{lstlisting}
+
+>   # расстояние между вершинами меньше 1?
+>   def distance(a)
+>     if self.dist(a)<=1
+>       1
+>     else
+>       0
+>     end
+>   end
 \end{verbatim}
 \end{small}
 
-Ниже приведён исходный код части скрипта, который использовался для построения
-графиков различных функций в книге~\cite{roganov-jurists}. Важно отметить, что
-в приложение никогда не следует включать большие файлы целиком. Кроме того, 
-исходные тексты включаемых фрагментов программ при необходимости надо 
-отредактировать так, чтобы все их строки помещались на странице целиком. Для
-указанного файла это важное требование нарушено.
+Модификация эталонного проекта \texttt{convex.rb}:
+\begin{small}
+\begin{verbatim}
+>   def dist;      0   end
 
-\lstinputlisting[numbers=none, linerange={36-50}]{programms/fixplot.rb}
+ 
+>   def dist
+>     if @p.dist(@q) <= 1
+>       1
+>     else
+>       0
+>     end
+> end
+ 
 
+<   attr_reader :points, :perimeter, :area
+---
+>   attr_reader :points, :perimeter, :area, :dist
+ 
+>     @dist = a.distance(b) + b.distance(c) + c.distance(a)
+ 
+>  @perimeter += t.dist(@points.first) + t.dist(@points.last)
+>  @dist += t.distance(@points.first) + t.distance(@points.last)
+>  @points.push_first(t)
+ 
+>  p = @points.pop_first
+>   while t.light?(p, @points.first)
+>     @perimeter -= p.dist(@points.first)
+>     @area      += R2Point.area(t, p, @points.first).abs
+>     @dist      -= p.distance(@points.first)
+>       p  = @points.pop_first
+>   end
+> @points.push_first(p)
+
+
+
+
+>  p = @points.pop_last
+>    while t.light?(@points.last, p)
+>      @perimeter -= p.dist(@points.last)
+>      @area      += R2Point.area(t, p, @points.last).abs
+>      @dist      -= p.distance(@points.last)
+>        p = @points.pop_last
+>    end
+>  @points.push_last(p)
+
+> 
+\end{verbatim}
+\end{small}
